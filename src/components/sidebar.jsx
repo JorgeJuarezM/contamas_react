@@ -30,13 +30,25 @@ const AppSidebar = () => {
                     </div>
                     <div className="sidenav-header-logo">
                         <Link to="#" href="index.html" className="brand-small text-center">
-                            <strong>B</strong><strong className="text-primary">D</strong>
+                            <strong>C</strong><strong className="text-primary">M</strong>
                         </Link></div>
                 </div>
                 <div className="main-menu">
-                    <h5 className="sidenav-heading">Main</h5>
+                    <h5 className="sidenav-heading">Mi Empresa con nombre bien grande y ademas aburrido</h5>
                     <ul id="side-main-menu" className="side-menu list-unstyled">
-                        <SidebarLink to="/"> <i className="icon-home"></i>Home</SidebarLink>
+                        {/* MENU */}
+                        {/* MENU */}
+                        {/* MENU */}
+                        {/* MENU */}
+                        {/* MENU */}
+                        {/* MENU */}
+                        <SidebarLink to="/home"> <i className="icon-line-chart"></i>Resumen</SidebarLink>
+                        {/* MENU */}
+                        {/* MENU */}
+                        {/* MENU */}
+                        {/* MENU */}
+                        {/* MENU */}
+                        {/* MENU */}
                     </ul>
                 </div>
             </div>

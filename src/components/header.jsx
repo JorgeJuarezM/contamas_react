@@ -1,18 +1,39 @@
 import React from 'react';
 import Link from './link'
+import { useAuth } from 'reactfire';
 
 
 const AppHeader = () => {
+    const auth = useAuth()
+    const handleClick = (evt) => {
+        evt.preventDefault()
+        auth.signOut()
+        // window.location.reload(true);
+    }
+
+    const handleToggle = (e) => {
+        e.preventDefault();
+        if (window.jQuery(window).outerWidth() > 1194) {
+            window.jQuery('nav.side-navbar').toggleClass('shrink');
+            window.jQuery('.page').toggleClass('active');
+        } else {
+            window.jQuery('nav.side-navbar').toggleClass('show-sm');
+            window.jQuery('.page').toggleClass('active-sm');
+        }
+    }
     return (
         <header className="header">
             <nav className="navbar">
                 <div className="container-fluid">
                     <div className="navbar-holder d-flex align-items-center justify-content-between">
                         <div className="navbar-header">
-                            <Link id="toggle-btn" href="#" className="menu-btn"><i className="icon-bars"> </i>
+                            <Link id="toggle-btn" href="#" onClick={handleToggle} className="menu-btn"><i className="icon-bars"> </i>
                             </Link>
                             <Link href="index.html" className="navbar-brand">
-                                <div className="brand-text d-none d-md-inline-block"><span>Bootstrap </span><strong className="text-primary">Dashboard</strong></div>
+                                {/* <div className="brand-text d-none d-md-inline-block"><span>Bootstrap </span><strong className="text-primary">Dashboard</strong></div> */}
+                                <img src="/logo_full.png" className="brand-text d-none d-md-inline-block" style={{
+                                    height: "50px"
+                                }} alt="avatar"></img>
                             </Link></div>
                         <ul className="nav-menu list-unstyled d-flex flex-md-row align-items-md-center">
                             <li className="nav-item dropdown">
@@ -69,7 +90,12 @@ const AppHeader = () => {
                                     <li><Link rel="nofollow" href="#" className="dropdown-item"> <img src="/theme/img/flags/16/FR.png" alt="English" className="mr-2" /><span>French                                                         </span></Link></li>
                                 </ul>
                             </li>
-                            <li className="nav-item"><Link href="login.html" className="nav-link logout"> <span className="d-none d-sm-inline-block">Logout</span><i className="fa fa-sign-out"></i></Link></li>
+                            <li className="nav-item">
+                                <Link href="#" className="nav-link logout" onClick={handleClick}>
+                                    <span className="d-none d-sm-inline-block">Logout</span>
+                                    <i className="fa fa-sign-out"></i>
+                                </Link>
+                            </li>
                         </ul>
                     </div>
                 </div>

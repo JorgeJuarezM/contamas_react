@@ -4,7 +4,8 @@ $(function () {
         extraClasses: 'messenger-fixed messenger-on-top  messenger-on-right',
         theme: 'flat',
         messageDefaults: {
-            showCloseButton: true
+            showCloseButton: true,
+            hideAfter: 2
         }
     }
     Messenger().post({
