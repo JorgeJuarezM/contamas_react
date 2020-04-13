@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import './App.css';
 import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom';
 import AppSidebar from './components/sidebar';
@@ -32,21 +32,37 @@ function App() {
   let features = ['auth', 'database', 'messaging', 'storage'].filter(feature => typeof firebase[feature] === 'function');
   const auth = useAuth()
 
-  console.log(`firebase has been initialized with ${features.join(", ")}`);
-
   const [isLogged, setIsLogged] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  auth.onAuthStateChanged((user, error) => {
-    if (user) {
-      setIsLogged(true);
-    } else {
-      setIsLogged(false);
-    }
-    if (isLoading) {
-      setIsLoading(false);
-    }
-  });
+  useEffect(() => {
+    console.log(`firebase has been initialized with ${features.join(", ")}`);
+  }, [])
+
+  useEffect(() => {
+    auth.onAuthStateChanged((user, error) => {
+      if (user != null) {
+        console.log(user.uid)
+        user.providerData.forEach(function (profile) {
+          console.log("Sign-in provider: " + profile.providerId);
+          console.log("  Provider-specific UID: " + profile.uid);
+          console.log("  Name: " + profile.displayName);
+          console.log("  Email: " + profile.email);
+          console.log("  Photo URL: " + profile.photoURL);
+        });
+      }
+
+
+      if (user) {
+        setIsLogged(true);
+      } else {
+        setIsLogged(false);
+      }
+      if (isLoading) {
+        setIsLoading(false);
+      }
+    });
+  }, [auth])
 
   if (isLoading) {
     return (<div style={{

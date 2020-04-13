@@ -1,110 +1,58 @@
 import React, { Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import { useEffect } from 'react';
+import LoadChartTool from '../../tools/load_chart';
+import { useAuth, useDatabase } from 'reactfire';
+import { useState } from 'react';
+
+
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { Modal, Button } from "react-bootstrap";
+import { useRef } from 'react';
+// import LoadC from "./../../tools/load_chart";
+
+const getData = ref => {
+    return new Promise((resolve, reject) => {
+        const onData = data => resolve(data.val());
+        const onError = error => reject(error);
+        ref.once('value', onData, onError);
+    });
+}
 
 const HomeIndexPage = () => {
+    const auth = useAuth()
+    const db = useDatabase()
+    const [company, setCompany] = useState()
+
+    useEffect(() => {
+        let ref = db.ref("users").child(auth.currentUser.uid).child("company")
+        getData(ref).then(value => {
+            return getData(
+                db.ref("company").orderByChild("uid").equalTo(value)
+            ).then((currentCompany) => {
+                setCompany(currentCompany);
+            })
+        });
+    }, [auth, db])
+
+
+    // Graps
     useEffect(function () {
-        // Main Template Color
-        var brandPrimary = '#33b35a';
+        if (company) {
+            LoadChartTool()
+        }
+    }, [company]);
 
 
-        // ------------------------------------------------------- //
-        // Line Chart
-        // ------------------------------------------------------ //
-        var LINECHART = window.jQuery('#lineCahrt');
-        new window.Chart(LINECHART, {
-            type: 'line',
-            options: {
-                legend: {
-                    display: false
-                }
-            },
-            data: {
-                labels: ["Jan", "Feb", "Mar", "Apr", "May", "June", "July"],
-                datasets: [
-                    {
-                        label: "My First dataset",
-                        fill: true,
-                        lineTension: 0.3,
-                        backgroundColor: "rgba(77, 193, 75, 0.4)",
-                        borderColor: brandPrimary,
-                        borderCapStyle: 'butt',
-                        borderDash: [],
-                        borderDashOffset: 0.0,
-                        borderJoinStyle: 'miter',
-                        borderWidth: 1,
-                        pointBorderColor: brandPrimary,
-                        pointBackgroundColor: "#fff",
-                        pointBorderWidth: 1,
-                        pointHoverRadius: 5,
-                        pointHoverBackgroundColor: brandPrimary,
-                        pointHoverBorderColor: "rgba(220,220,220,1)",
-                        pointHoverBorderWidth: 2,
-                        pointRadius: 1,
-                        pointHitRadius: 0,
-                        data: [50, 20, 60, 31, 52, 22, 40],
-                        spanGaps: false
-                    },
-                    {
-                        label: "My First dataset",
-                        fill: true,
-                        lineTension: 0.3,
-                        backgroundColor: "rgba(75,192,192,0.4)",
-                        borderColor: "rgba(75,192,192,1)",
-                        borderCapStyle: 'butt',
-                        borderDash: [],
-                        borderDashOffset: 0.0,
-                        borderJoinStyle: 'miter',
-                        borderWidth: 1,
-                        pointBorderColor: "rgba(75,192,192,1)",
-                        pointBackgroundColor: "#fff",
-                        pointBorderWidth: 1,
-                        pointHoverRadius: 5,
-                        pointHoverBackgroundColor: "rgba(75,192,192,1)",
-                        pointHoverBorderColor: "rgba(220,220,220,1)",
-                        pointHoverBorderWidth: 2,
-                        pointRadius: 1,
-                        pointHitRadius: 10,
-                        data: [65, 59, 30, 81, 46, 55, 30],
-                        spanGaps: false
-                    }
-                ]
-            }
-        });
+    const [show, setShow] = useState(false);
 
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
 
-        // ------------------------------------------------------- //
-        // Pie Chart
-        // ------------------------------------------------------ //
-        var PIECHART = window.jQuery('#pieChart');
-        new window.Chart(PIECHART, {
-            type: 'doughnut',
-            data: {
-                labels: [
-                    "First",
-                    "Second",
-                    "Third"
-                ],
-                datasets: [
-                    {
-                        data: [300, 50, 100],
-                        borderWidth: [1, 1, 1],
-                        backgroundColor: [
-                            brandPrimary,
-                            "rgba(75,192,192,1)",
-                            "#FFCE56"
-                        ],
-                        hoverBackgroundColor: [
-                            brandPrimary,
-                            "rgba(75,192,192,1)",
-                            "#FFCE56"
-                        ]
-                    }]
-            }
-        });
+    const wraper = React.createRef();
 
-    }, []);
     return (
+        company &&
         <Fragment>
             <section className="dashboard-counts section-padding">
                 <div className="container-fluid">
@@ -470,7 +418,39 @@ const HomeIndexPage = () => {
                     </div>
                 </div>
             </section>
-        </Fragment>
+        </Fragment> || (
+            <div >
+
+                <Modal show={show} onHide={handleClose} size="xl" ref={wraper}>
+                    {/* <Modal.Header closeButton>
+                            <Modal.Title>Modal heading</Modal.Title>
+                        </Modal.Header>
+                        <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
+                        <Modal.Footer>
+                            <Button variant="secondary" onClick={handleClose}>Close</Button>
+                            <Button variant="primary" onClick={handleClose}>Save Changes</Button>
+                        </Modal.Footer> */}
+                    <div >
+                        <h1>Hola Mundo</h1>
+                    </div>
+                </Modal>
+                <section className="dashboard-counts section-padding">
+                    <div className="container-fluid">
+                        <div className="alert alert-info">
+                            <h3>
+                                <span className="fa-lg fa-stack">
+                                    <i className="fa fa-circle-o fa-stack-2x"></i>
+                                    <strong className="fa-stack-1x">
+                                        1
+                                    </strong>
+                                </span>
+                                Para emprezar a trabajar, necesitas crear una empresa, <Button variant="primary" onClick={handleShow}>Click Aqui</Button>
+                            </h3>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        )
     )
 }
 

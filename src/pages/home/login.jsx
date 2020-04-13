@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Button } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from 'reactfire';
 import firebase from 'firebase'
@@ -9,7 +9,7 @@ import { useEffect } from 'react';
 
 const LoginPage = () => {
 
-    // const loginPropvider = new firebase.auth.EmailAuthProvider();
+    const loginProvider = new firebase.auth.GoogleAuthProvider();
     const auth = useAuth();
     const [username, setUsername] = useState("")
     const [passowrd, setPassword] = useState("")
@@ -41,6 +41,13 @@ const LoginPage = () => {
         setPassword(evt.target.value)
     }
 
+    const handleRegister = (evt) => {
+        evt.preventDefault()
+        auth.signInWithPopup(loginProvider).then(() => {
+            console.log("User Logged....");
+        });
+    }
+
     return (
         <div className="container-fluid px-3">
             <div className="row min-vh-100">
@@ -67,7 +74,8 @@ const LoginPage = () => {
                                 <input value={passowrd} onChange={onChangePassword} name="loginPassword" placeholder="Password" type="password" required data-msg="Please enter your password" className="form-control" />
                             </div>
                             <button className="btn btn-lg btn-block btn-primary mb-3" onClick={handleLogin}>Sign in</button>
-                            <p className="text-center"><small className="text-muted text-center">Don't have an account yet? <Link to="register-2.html">Register</Link>.</small></p>
+                            <p className="text-center"><small className="text-muted text-center">Don't have an account yet?
+                            <button onClick={handleRegister} className="btn btn-link text-muted">Register</button>.</small></p>
                         </form>
                     </div>
                 </div>
